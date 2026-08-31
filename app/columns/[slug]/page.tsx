@@ -4,6 +4,7 @@ import { Badge } from '@/components/ui/Badge';
 import { PremiumContent } from '@/components/columns/PremiumContent';
 import { ArticleBody } from '@/components/columns/ArticleBody';
 import { FaqList } from '@/components/columns/FaqList';
+import { RecordView } from '@/components/history/RecordView';
 
 export default async function ColumnDetailPage({
   params
@@ -20,6 +21,7 @@ export default async function ColumnDetailPage({
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-10">
+      <RecordView entityType="article" entityId={article.id} />
       <div className="mb-6 flex flex-wrap items-center gap-2">
         <Badge tone={topic.isPremium ? 'gold' : 'blue'}>
           {topic.isPremium ? '拓展专题' : '免费'}
