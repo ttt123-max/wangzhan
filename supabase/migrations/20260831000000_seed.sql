@@ -44,7 +44,7 @@ create table if not exists public.question_logs (
 create or replace function public.add_points(user_id uuid, amount integer)
 returns integer
 language plpgsql
-security definer
+security invoker
 set search_path = public
 as $$
 declare
@@ -53,10 +53,14 @@ begin
   if user_id is distinct from auth.uid() then
     raise exception 'forbidden: cannot modify another user points';
   end if;
-  update public.profiles
-  set points = greatest(0, points + coalesce(amount, 0))
-  where id = user_id
-  returning points into new_points;
+  update public.profiles p
+  set points = greatest(0, p.points + coalesce(amount, 0))
+  where p.id = user_id
+    and exists (
+      select 1 from public.profiles mine
+      where mine.id = auth.uid()
+    )
+  returning p.points into new_points;
   return new_points;
 end;
 $$;
