@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { CheckCircle2, CircleX, RotateCcw, Sparkles } from 'lucide-react';
+import { CheckCircle2, CircleX, Sparkles } from 'lucide-react';
 import { quizzes } from '@/lib/content';
 import type { Quiz } from '@/lib/types';
 import { createStateStore } from '@/lib/state';
@@ -17,7 +17,7 @@ export function QuizRunner() {
   const [loading, setLoading] = useState(true);
   const [attempted, setAttempted] = useState<number[]>([]);
   const [points, setPoints] = useState(0);
-  const [index, setIndex] = useState(0);
+  const [active, setActive] = useState<Quiz | null>(null);
   const [selected, setSelected] = useState<number | null>(null);
   const [revealed, setRevealed] = useState(false);
   const [counted, setCounted] = useState(false);
@@ -28,7 +28,7 @@ export function QuizRunner() {
     const p = await store.loadProfile();
     setAttempted(ids);
     setPoints(p?.points ?? 0);
-    setIndex(0);
+    setActive(quizzes.filter((q) => !ids.includes(q.id))[0] ?? null);
     setLoading(false);
   };
 
@@ -37,8 +37,9 @@ export function QuizRunner() {
   }, []);
 
   const pool = quizzes.filter((q) => !attempted.includes(q.id));
-  const current: Quiz | undefined = pool[index];
-  const done = pool.length === 0 || index >= pool.length;
+  const current = active ?? pool[0] ?? null;
+  const done = pool.length === 0;
+  const answeredPercent = quizzes.length ? Math.min(100, (attempted.length / quizzes.length) * 100) : 0;
 
   const choose = async (optionIndex: number) => {
     if (!current || revealed) return;
@@ -49,12 +50,16 @@ export function QuizRunner() {
     const store = createStateStore();
     const wasCounted = await store.recordQuiz(current.id, correct, earned);
     setCounted(wasCounted);
-    if (wasCounted && correct) setPoints((p) => p + earned);
+    if (wasCounted && correct) {
+      setPoints((p) => p + earned);
+      window.dispatchEvent(new Event('kxb:auth'));
+    }
     setAttempted((prev) => (prev.includes(current.id) ? prev : [...prev, current.id]));
   };
 
   const next = () => {
-    setIndex((i) => i + 1);
+    const remaining = quizzes.filter((q) => !attempted.includes(q.id));
+    setActive(remaining[0] ?? null);
     setSelected(null);
     setRevealed(false);
     setCounted(false);
@@ -76,7 +81,7 @@ export function QuizRunner() {
         </p>
         <div className="mt-5 flex justify-center gap-3">
           <ButtonLink href="/topics" variant="outline" icon={Sparkles}>去专题库</ButtonLink>
-          <Button variant="ghost" icon={RotateCcw} onClick={() => void load()}>重新开始</Button>
+          <ButtonLink href="/station" variant="ghost">去普法驿站提问</ButtonLink>
         </div>
       </div>
     );
@@ -87,11 +92,12 @@ export function QuizRunner() {
       <ScorePanel points={points} completed={attempted.length} />
       <div className="rounded-lg border border-border bg-surface p-6 shadow-soft sm:p-8">
         <div className="mb-4 flex items-center justify-between">
-          <p className="text-sm text-muted">第 {index + 1} / {pool.length} 题</p>
-          <div className="flex gap-1">
-            {pool.map((_, i) => (
-              <span key={i} className={`h-1.5 w-5 rounded-full ${i <= index ? 'bg-brand-blue' : 'bg-surface-2'}`} />
-            ))}
+          <p className="text-sm text-muted">共 {quizzes.length} 题 · 已完成 {attempted.length}</p>
+          <div className="h-1.5 w-40 overflow-hidden rounded-full bg-surface-2">
+            <div
+              className="h-full rounded-full bg-brand-blue transition-all duration-500"
+              style={{ width: `${answeredPercent}%` }}
+            />
           </div>
         </div>
         <h2 className="text-lg font-semibold leading-snug text-foreground">{current?.question}</h2>
