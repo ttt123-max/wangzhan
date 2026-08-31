@@ -45,10 +45,14 @@ create or replace function public.add_points(user_id uuid, amount integer)
 returns integer
 language plpgsql
 security definer
+set search_path = public
 as $$
 declare
   new_points integer;
 begin
+  if user_id is distinct from auth.uid() then
+    raise exception 'forbidden: cannot modify another user points';
+  end if;
   update public.profiles
   set points = greatest(0, points + coalesce(amount, 0))
   where id = user_id
