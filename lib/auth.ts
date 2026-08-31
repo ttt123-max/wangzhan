@@ -16,9 +16,12 @@ export interface AuthResult {
 export async function signIn(email: string, password: string): Promise<AuthResult> {
   if (isSupabaseConfigured()) {
     const { error } = await getSupabaseClient().auth.signInWithPassword({ email, password });
-    return error ? { ok: false, error: error.message } : { ok: true };
+    if (error) return { ok: false, error: error.message };
+    emitAuthChanged();
+    return { ok: true };
   }
   setLocalSession(email.split('@')[0] || '本站访客');
+  emitAuthChanged();
   return { ok: true };
 }
 
@@ -29,9 +32,12 @@ export async function signUp(nickname: string, email: string, password: string):
       password,
       options: { data: { nickname } }
     });
-    return error ? { ok: false, error: error.message } : { ok: true };
+    if (error) return { ok: false, error: error.message };
+    emitAuthChanged();
+    return { ok: true };
   }
   setLocalSession(nickname || email.split('@')[0] || '本站访客');
+  emitAuthChanged();
   return { ok: true };
 }
 
@@ -43,15 +49,20 @@ export async function signOut(): Promise<void> {
       localStorage.removeItem(k)
     );
   }
+  emitAuthChanged();
 }
 
 function setLocalSession(nickname: string): void {
   if (typeof localStorage === 'undefined') return;
   const current = localStorage.getItem('kxb:profile');
-  if (!current) {
-    localStorage.setItem(
-      'kxb:profile',
-      JSON.stringify({ id: 'local-user', nickname, points: 0 })
-    );
+  const profile = current
+    ? { ...(JSON.parse(current) as { id: string; points: number }), nickname }
+    : { id: 'local-user', nickname, points: 0 };
+  localStorage.setItem('kxb:profile', JSON.stringify(profile));
+}
+
+function emitAuthChanged(): void {
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new Event('kxb:auth'));
   }
 }

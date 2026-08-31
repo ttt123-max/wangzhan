@@ -28,6 +28,14 @@ export function SiteHeader() {
       .catch(() => setProfile(null));
   }, []);
 
+  useEffect(() => {
+    const onAuth = async () => {
+      setProfile(await createStateStore().loadProfile());
+    };
+    window.addEventListener('kxb:auth', onAuth);
+    return () => window.removeEventListener('kxb:auth', onAuth);
+  }, []);
+
   const refresh = async () => {
     setProfile(await createStateStore().loadProfile());
   };
