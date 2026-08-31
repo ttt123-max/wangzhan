@@ -2,7 +2,7 @@ import { Skeleton } from './Skeleton';
 
 export function StatePanel() {
   return (
-    <div className="space-y-3 rounded-xl border border-border bg-surface p-5">
+    <div className="space-y-3 rounded-lg border border-border bg-surface p-5">
       <div className="flex items-center gap-3">
         <Skeleton className="h-11 w-11 rounded-full" />
         <div className="flex-1 space-y-2">

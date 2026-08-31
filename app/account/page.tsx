@@ -80,7 +80,7 @@ export default function AccountPage() {
     <div className="mx-auto max-w-[1400px] px-4 py-10 sm:px-6">
       <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
         <div className="flex items-center gap-4">
-          <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#101933] text-xl font-semibold text-white">
+          <span className="flex h-14 w-14 items-center justify-center rounded-lg bg-[#101933] text-xl font-semibold text-white">
             {profile.nickname.slice(0, 1).toUpperCase()}
           </span>
           <div>
@@ -94,7 +94,7 @@ export default function AccountPage() {
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {stats.map((s) => (
           <Card key={s.label} className="flex items-center gap-4 p-5">
-            <span className={`flex h-11 w-11 items-center justify-center rounded-xl ${s.tone}`}>
+            <span className={`flex h-11 w-11 items-center justify-center rounded-lg ${s.tone}`}>
               <s.icon className="h-5 w-5" />
             </span>
             <div>
@@ -166,7 +166,7 @@ export default function AccountPage() {
               <Link
                 key={a.href}
                 href={a.href}
-                className="group flex items-center justify-between rounded-xl border border-border px-4 py-3 transition-colors hover:border-brand-blue/40 hover:bg-surface-2"
+                className="group flex items-center justify-between rounded-lg border border-border px-4 py-3 transition-colors hover:border-brand-blue/40 hover:bg-surface-2"
               >
                 <span>
                   <span className="block text-sm font-medium text-foreground">{a.label}</span>

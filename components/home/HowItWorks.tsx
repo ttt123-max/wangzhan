@@ -25,7 +25,7 @@ export function HowItWorks() {
         <div className="grid gap-4 md:grid-cols-4">
           {steps.map((s, i) => (
             <Reveal key={s.title} delay={i * 80}>
-              <div className="relative h-full rounded-xl border border-border bg-surface-2 p-6">
+              <div className="relative h-full rounded-lg border border-border bg-surface-2 p-6">
                 <div className="flex items-center justify-between">
                   <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-brand-blueSoft">
                     <s.icon className="h-5 w-5 text-brand-blue" />

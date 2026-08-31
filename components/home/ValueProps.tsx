@@ -44,8 +44,8 @@ export function ValueProps() {
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {items.map((item, i) => (
           <Reveal key={item.title} delay={i * 70}>
-            <div className="group h-full rounded-xl border border-border bg-surface p-6 shadow-soft transition-all duration-200 hover:-translate-y-1 hover:border-brand-blue/40 hover:shadow-lift">
-              <div className={`mb-4 flex h-11 w-11 items-center justify-center rounded-xl ${item.accent}`}>
+            <div className="group h-full rounded-lg border border-border bg-surface p-6 shadow-soft transition-all duration-200 hover:-translate-y-1 hover:border-brand-blue/40 hover:shadow-lift">
+              <div className={`mb-4 flex h-11 w-11 items-center justify-center rounded-lg ${item.accent}`}>
                 <item.icon className="h-5 w-5" />
               </div>
               <h3 className="font-semibold text-foreground">{item.title}</h3>

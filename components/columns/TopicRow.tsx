@@ -7,9 +7,9 @@ export function TopicRow({ topic }: { topic: Topic }) {
   return (
     <Link
       href={`/columns/${topic.slug}`}
-      className="group flex items-center gap-4 rounded-xl border border-border bg-surface p-5 shadow-soft transition-all duration-200 hover:-translate-y-0.5 hover:border-brand-blue/40 hover:shadow-lift"
+      className="group flex items-center gap-4 rounded-lg border border-border bg-surface p-5 shadow-soft transition-all duration-200 hover:-translate-y-0.5 hover:border-brand-blue/40 hover:shadow-lift"
     >
-      <div className="hidden h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-brand-blueSoft sm:flex">
+      <div className="hidden h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-brand-blueSoft sm:flex">
         <BookOpen className="h-5 w-5 text-brand-blue" />
       </div>
       <div className="min-w-0 flex-1">

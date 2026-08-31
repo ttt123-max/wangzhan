@@ -64,7 +64,7 @@ export function QuizRunner() {
 
   if (done) {
     return (
-      <div className="rounded-2xl border border-border bg-surface p-8 text-center shadow-soft">
+      <div className="rounded-lg border border-border bg-surface p-8 text-center shadow-soft">
         <Mascot mood="cheer" className="mx-auto h-24 w-24" />
         <div className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-brand-tealSoft px-3 py-1 text-sm font-medium text-teal-700">
           <Sparkles className="h-4 w-4" />
@@ -85,7 +85,7 @@ export function QuizRunner() {
   return (
     <div className="space-y-4">
       <ScorePanel points={points} completed={attempted.length} />
-      <div className="rounded-2xl border border-border bg-surface p-6 shadow-soft sm:p-8">
+      <div className="rounded-lg border border-border bg-surface p-6 shadow-soft sm:p-8">
         <div className="mb-4 flex items-center justify-between">
           <p className="text-sm text-muted">第 {index + 1} / {pool.length} 题</p>
           <div className="flex gap-1">

@@ -10,8 +10,7 @@ export function Cta() {
     <section className="px-4 pb-2 sm:px-6">
       <div className="mx-auto max-w-[1400px]">
         <Reveal>
-          <div className="relative overflow-hidden rounded-2xl bg-[#0f1b36] px-6 py-12 text-center shadow-lift sm:px-10">
-            <div className="absolute inset-0 dot-backdrop opacity-40" aria-hidden />
+          <div className="relative overflow-hidden rounded-lg bg-gradient-to-br from-[#0f1b36] to-[#142a52] px-6 py-12 text-center shadow-lift sm:px-10">
             <div className="relative mx-auto max-w-2xl">
               <Mascot mood="cheer" className="mx-auto h-16 w-16" />
               <h2 className="mt-4 text-2xl font-semibold tracking-tight text-white sm:text-3xl">

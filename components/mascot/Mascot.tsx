@@ -1,3 +1,5 @@
+import { useId } from 'react';
+
 type Mood = 'default' | 'cheer' | 'ask';
 
 interface MascotProps {
@@ -6,6 +8,7 @@ interface MascotProps {
 }
 
 export function Mascot({ mood = 'default', className }: MascotProps) {
+  const gradId = useId();
   const smile = mood === 'ask' ? 'M0 14 q0 8 -10 8' : 'M0 12 q0 12 12 12';
   const arms = mood === 'cheer' ? 'M-46 4 l-14 -22 M46 4 l14 -22' : 'M-46 4 l-12 8 M46 4 l12 8';
 
@@ -18,7 +21,7 @@ export function Mascot({ mood = 'default', className }: MascotProps) {
       xmlns="http://www.w3.org/2000/svg"
     >
       <defs>
-        <linearGradient id="body" x1="0" y1="0" x2="0" y2="1">
+        <linearGradient id={gradId} x1="0" y1="0" x2="0" y2="1">
           <stop offset="0" stopColor="#4A8BFF" />
           <stop offset="1" stopColor="#1E5EFF" />
         </linearGradient>
@@ -36,7 +39,7 @@ export function Mascot({ mood = 'default', className }: MascotProps) {
       <path d="M158 128 q26 6 14 28 q-10 16 -26 4" fill="#12B5A5" />
 
       {/* 身体 */}
-      <path d="M100 42 C 60 42 44 78 46 116 C 48 158 70 182 100 182 C 130 182 152 158 154 116 C 156 78 140 42 100 42 Z" fill="url(#body)" />
+      <path d="M100 42 C 60 42 44 78 46 116 C 48 158 70 182 100 182 C 130 182 152 158 154 116 C 156 78 140 42 100 42 Z" fill={`url(#${gradId})`} />
       {/* 肚皮 */}
       <ellipse cx="100" cy="142" rx="38" ry="26" fill="#EAF2FF" />
 

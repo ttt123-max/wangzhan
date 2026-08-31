@@ -50,7 +50,7 @@ export default function LoginPage() {
         <Mascot mood="default" className="mt-8 h-48 w-48" />
       </div>
 
-      <div className="rounded-2xl border border-border bg-surface p-6 shadow-lift sm:p-8">
+      <div className="rounded-lg border border-border bg-surface p-6 shadow-lift sm:p-8">
         <div className="mb-5 lg:hidden">
           <div className="mb-3 flex items-center gap-2">
             <Mascot mood="default" className="h-10 w-10" />
@@ -59,7 +59,7 @@ export default function LoginPage() {
         </div>
         <h2 className="text-xl font-semibold text-foreground">{mode === 'login' ? '登录账户' : '注册账户'}</h2>
 
-        <div className="mt-5 grid grid-cols-2 gap-1 rounded-xl bg-surface-2 p-1">
+        <div className="mt-5 grid grid-cols-2 gap-1 rounded-lg bg-surface-2 p-1">
           {(['login', 'signup'] as const).map((m) => (
             <button
               key={m}

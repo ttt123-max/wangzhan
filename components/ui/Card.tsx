@@ -14,7 +14,7 @@ export function Card({ variant = 'default', className, children, ...props }: Car
       'border border-border bg-surface shadow-soft transition-all duration-200 hover:-translate-y-0.5 hover:border-brand-blue/40 hover:shadow-lift'
   };
   return (
-    <div className={cn('rounded-xl', variants[variant], className)} {...props}>
+    <div className={cn('rounded-lg', variants[variant], className)} {...props}>
       {children}
     </div>
   );

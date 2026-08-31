@@ -8,9 +8,7 @@ import { Reveal } from '@/components/layout/Reveal';
 
 export function Hero() {
   return (
-    <section className="relative overflow-hidden border-b border-border">
-      <div className="absolute inset-0 grid-backdrop opacity-70" aria-hidden />
-      <div className="absolute -right-24 -top-24 h-96 w-96 rounded-full bg-brand-blueSoft/60 blur-3xl" aria-hidden />
+    <section className="relative overflow-hidden border-b border-border bg-gradient-to-b from-[#edf2ff] to-bg">
       <div className="relative mx-auto grid max-w-[1400px] items-center gap-10 px-4 py-16 sm:px-6 lg:grid-cols-[1.05fr_0.95fr] lg:py-24">
         <Reveal>
           <div>
@@ -45,8 +43,7 @@ export function Hero() {
 
         <Reveal delay={120}>
           <div className="relative">
-            <div className="relative overflow-hidden rounded-2xl border border-border bg-surface p-6 shadow-lift">
-              <div className="absolute right-0 top-0 h-40 w-40 rounded-bl-full bg-brand-tealSoft/70" aria-hidden />
+            <div className="relative overflow-hidden rounded-lg border border-border bg-surface p-6 shadow-lift">
               <div className="relative flex items-center justify-center py-8">
                 <Mascot mood="default" className="h-64 w-64 sm:h-72 sm:w-72" />
               </div>
@@ -56,13 +53,13 @@ export function Hero() {
                   ['32+', '常见问答'],
                   ['100%', '可回溯']
                 ].map(([n, label]) => (
-                  <div key={label} className="rounded-xl bg-surface-2 px-2 py-3">
+                  <div key={label} className="rounded-lg bg-surface-2 px-2 py-3">
                     <p className="text-lg font-semibold text-brand-blue">{n}</p>
                     <p className="mt-0.5 text-xs text-muted">{label}</p>
                   </div>
                 ))}
               </div>
-              <div className="relative mt-4 flex items-center justify-between rounded-xl border border-border bg-surface px-4 py-3">
+              <div className="relative mt-4 flex items-center justify-between rounded-lg border border-border bg-surface px-4 py-3">
                 <div className="flex items-center gap-2">
                   <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-goldSoft">
                     <Sparkles className="h-4 w-4 text-brand-gold" />

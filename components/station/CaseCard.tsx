@@ -13,10 +13,10 @@ export function CaseCard({ topic, faq }: { topic: Topic; faq?: Faq }) {
   return (
     <Link
       href={`/columns/${topic.slug}`}
-      className="group flex h-full flex-col overflow-hidden rounded-xl border border-border bg-surface shadow-soft transition-all duration-200 hover:-translate-y-1 hover:border-brand-blue/40 hover:shadow-lift"
+      className="group flex h-full flex-col overflow-hidden rounded-lg border border-border bg-surface shadow-soft transition-all duration-200 hover:-translate-y-1 hover:border-brand-blue/40 hover:shadow-lift"
     >
       <div className={`flex h-28 items-center justify-center ${accentMap[topic.accent]} p-4`}>
-        <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-surface shadow-soft">
+        <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-surface shadow-soft">
           <BookOpen className="h-5 w-5 text-brand-blue" />
         </div>
       </div>

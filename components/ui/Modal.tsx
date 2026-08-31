@@ -21,7 +21,7 @@ export function Modal({ open, onClose, title, description, children }: ModalProp
         onClick={onClose}
         className="absolute inset-0 bg-[#0d1b3d]/45 backdrop-blur-sm"
       />
-      <div className="relative w-full max-w-md overflow-hidden rounded-2xl border border-border bg-surface shadow-lift">
+      <div className="relative w-full max-w-md overflow-hidden rounded-lg border border-border bg-surface shadow-lift">
         <div className="flex items-start justify-between gap-4 px-6 pt-5">
           <div>
             {title ? <h2 className="text-lg font-semibold text-foreground">{title}</h2> : null}
