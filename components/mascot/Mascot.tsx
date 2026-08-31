@@ -1,0 +1,70 @@
+type Mood = 'default' | 'cheer' | 'ask';
+
+interface MascotProps {
+  mood?: Mood;
+  className?: string;
+}
+
+export function Mascot({ mood = 'default', className }: MascotProps) {
+  const smile = mood === 'ask' ? 'M0 14 q0 8 -10 8' : 'M0 12 q0 12 12 12';
+  const arms = mood === 'cheer' ? 'M-46 4 l-14 -22 M46 4 l14 -22' : 'M-46 4 l-12 8 M46 4 l12 8';
+
+  return (
+    <svg
+      viewBox="0 0 200 200"
+      role="img"
+      aria-label="科小獬"
+      className={className}
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <defs>
+        <linearGradient id="body" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor="#4A8BFF" />
+          <stop offset="1" stopColor="#1E5EFF" />
+        </linearGradient>
+      </defs>
+      {/* 光环/智慧天线 */}
+      <ellipse cx="100" cy="52" rx="26" ry="10" fill="#12B5A5" opacity="0.65" />
+      <path d="M100 62 l0 -34" stroke="#12B5A5" strokeWidth="7" strokeLinecap="round" />
+      <circle cx="100" cy="26" r="9" fill="#F5B60D" />
+
+      {/* 耳朵 */}
+      <path d="M52 88 l-14 -24 l20 12 z" fill="#2C6BE0" />
+      <path d="M148 88 l14 -24 l-20 12 z" fill="#2C6BE0" />
+
+      {/* 尾巴 */}
+      <path d="M158 128 q26 6 14 28 q-10 16 -26 4" fill="#12B5A5" />
+
+      {/* 身体 */}
+      <path d="M100 42 C 60 42 44 78 46 116 C 48 158 70 182 100 182 C 130 182 152 158 154 116 C 156 78 140 42 100 42 Z" fill="url(#body)" />
+      {/* 肚皮 */}
+      <ellipse cx="100" cy="142" rx="38" ry="26" fill="#EAF2FF" />
+
+      {/* 独角 */}
+      <path d="M96 44 C 90 20 92 14 100 6 C 108 14 110 20 104 44 Z" fill="#F5B60D" />
+      <path d="M97 40 C 94 28 96 20 100 14 C 104 20 106 28 103 40 Z" fill="#FFD267" />
+
+      {/* 眼睛 */}
+      <circle cx="86" cy="94" r="5" fill="#14213D" />
+      <circle cx="114" cy="94" r="5" fill="#14213D" />
+      <circle cx="88" cy="92" r="1.8" fill="#fff" />
+      <circle cx="116" cy="92" r="1.8" fill="#fff" />
+
+      {/* 腮红 */}
+      <circle cx="74" cy="104" r="5" fill="#F5B60D" opacity="0.4" />
+      <circle cx="126" cy="104" r="5" fill="#F5B60D" opacity="0.4" />
+
+      {/* 嘴 */}
+      <path d={smile} stroke="#14213D" strokeWidth="3" fill="none" strokeLinecap="round" />
+
+      {/* 手臂 */}
+      <path d={arms} stroke="#2C6BE0" strokeWidth="10" strokeLinecap="round" />
+
+      {/* 法盾 */}
+      <g transform="translate(150 130)">
+        <path d="M0 -16 L13 -9 L13 6 C 13 16 6 22 0 25 C -6 22 -13 16 -13 6 L -13 -9 Z" fill="#fff" stroke="#F5B60D" strokeWidth="3" />
+        <path d="M0 -8 L6 -3 L0 10 L-6 -3 Z" fill="#12B5A5" />
+      </g>
+    </svg>
+  );
+}
