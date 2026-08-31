@@ -7,5 +7,6 @@ dist/
 .env.local.disabled
 .env*.local
 *.log
+*.tsbuildinfo
 .DS_Store
 .pnpm-store/
