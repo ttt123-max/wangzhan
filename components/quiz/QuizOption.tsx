@@ -1,5 +1,6 @@
 'use client';
 
+import { Check, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 export function QuizOption({
@@ -15,10 +16,10 @@ export function QuizOption({
   isCorrect: boolean;
   onSelect: () => void;
 }) {
-  let style = 'border-slate-200 bg-white text-slate-700 hover:border-brand-blue/40';
-  if (revealed && isCorrect) style = 'border-brand-teal bg-brand-teal/10 text-teal-700';
-  else if (revealed && selected && !isCorrect) style = 'border-red-300 bg-red-50 text-red-600';
-  else if (selected) style = 'border-brand-blue bg-brand-blue/10 text-brand-blue';
+  let style = 'border-border bg-surface text-foreground-soft hover:border-brand-blue/50 hover:text-foreground';
+  if (revealed && isCorrect) style = 'border-brand-teal bg-brand-tealSoft/60 text-teal-700';
+  else if (revealed && selected && !isCorrect) style = 'border-brand-danger bg-brand-dangerSoft text-brand-danger';
+  else if (selected) style = 'border-brand-blue bg-brand-blueSoft text-brand-blueStrong';
 
   return (
     <button
@@ -26,11 +27,14 @@ export function QuizOption({
       disabled={revealed}
       onClick={onSelect}
       className={cn(
-        'rounded-lg border px-4 py-3 text-left text-sm transition-colors disabled:cursor-default',
+        'flex items-center justify-between rounded-xl border px-4 py-3.5 text-left text-sm font-medium transition-all',
+        'active:translate-y-[1px] disabled:cursor-default',
         style
       )}
     >
-      {label}
+      <span>{label}</span>
+      {revealed && isCorrect ? <Check className="h-4 w-4 shrink-0 text-brand-teal" /> : null}
+      {revealed && selected && !isCorrect ? <X className="h-4 w-4 shrink-0 text-brand-danger" /> : null}
     </button>
   );
 }

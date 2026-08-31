@@ -20,17 +20,17 @@ export default async function ColumnDetailPage({
   if (!article) notFound();
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-10">
+    <div className="mx-auto max-w-[1400px] px-4 py-10 sm:px-6">
       <RecordView entityType="article" entityId={article.id} />
       <div className="mb-6 flex flex-wrap items-center gap-2">
         <Badge tone={topic.isPremium ? 'gold' : 'blue'}>
           {topic.isPremium ? '拓展专题' : '免费'}
         </Badge>
-        <Badge tone="slate">{topic.category}</Badge>
+        <Badge tone="neutral">{topic.category}</Badge>
         <Badge tone="teal">{topic.caseType}</Badge>
       </div>
-      <h1 className="text-2xl font-bold text-[#14213d]">{topic.title}</h1>
-      <p className="mt-2 text-slate-500">{topic.summary}</p>
+      <h1 className="text-3xl font-semibold tracking-tight text-foreground">{topic.title}</h1>
+      <p className="mt-2 max-w-2xl text-pretty text-foreground-soft">{topic.summary}</p>
 
       <div className="mt-6">
         {topic.isPremium ? (

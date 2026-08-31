@@ -3,33 +3,39 @@
 import { useState } from 'react';
 import { Send } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
-import { Spinner } from '@/components/ui/Spinner';
+import { Input } from '@/components/ui/Input';
 
-export function QuestionForm({ onSubmit }: { onSubmit: (q: string) => void }) {
+export function QuestionForm({
+  onSubmit,
+  loading,
+  placeholder
+}: {
+  onSubmit: (q: string) => void;
+  loading?: boolean;
+  placeholder?: string;
+}) {
   const [value, setValue] = useState('');
-  const [loading, setLoading] = useState(false);
 
-  const submit = async () => {
+  const submit = () => {
     const q = value.trim();
     if (!q || loading) return;
-    setLoading(true);
-    await onSubmit(q);
-    setLoading(false);
+    onSubmit(q);
+    setValue('');
   };
 
   return (
     <div className="flex flex-col gap-3 sm:flex-row">
-      <input
+      <Input
         value={value}
         onChange={(e) => setValue(e.target.value)}
         onKeyDown={(e) => {
-          if (e.key === 'Enter') void submit();
+          if (e.key === 'Enter') submit();
         }}
-        placeholder="输入你关心的网络法律问题，例如：密码怎么设置更安全？"
-        className="flex-1 rounded-lg border border-slate-200 bg-white px-4 py-3 text-sm outline-none focus:border-brand-blue"
+        placeholder={placeholder ?? '输入你关心的网络法律问题，例如：密码怎么设置更安全？'}
+        className="h-12 flex-1"
       />
-      <Button onClick={() => void submit()} icon={Send} disabled={loading || !value.trim()}>
-        {loading ? <Spinner className="h-4 w-4 border-white" /> : '问科小獬'}
+      <Button onClick={submit} icon={Send} loading={loading} disabled={!value.trim()}>
+        问科小獬
       </Button>
     </div>
   );

@@ -3,24 +3,118 @@
 @tailwind utilities;
 
 :root {
-  --brand-blue: #1e5eff;
-  --brand-gold: #f5b60d;
-  --brand-teal: #12b5a5;
+  --bg: #f5f7fc;
+  --surface: #ffffff;
+  --surface-2: #f8fafd;
+  --foreground: #0d1b3d;
+  --foreground-soft: #3c4a6e;
+  --muted: #6b7695;
+  --border: #e2e8f5;
+  --border-strong: #cbd5ea;
+  --primary: #1d5fef;
+  --primary-strong: #1648ce;
+  --primary-soft: #e9efff;
+  --gold: #f0b429;
+  --gold-soft: #fdf3d7;
+  --teal: #0fa89a;
+  --teal-soft: #e2f6f3;
+  --danger: #d64b4b;
+  --danger-soft: #fcecec;
+  --radius: 10px;
 }
 
 html {
   -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
 }
 
 body {
   margin: 0;
-  background: #f6f8fc;
-  color: #14213d;
+  background: var(--bg);
+  color: var(--foreground);
   font-family:
     -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
     "Microsoft YaHei", "Hiragino Sans GB", sans-serif;
+  -webkit-font-smoothing: antialiased;
 }
 
 * {
   box-sizing: border-box;
+}
+
+::selection {
+  background: var(--primary-soft);
+  color: var(--primary-strong);
+}
+
+:where(button, a, input, [role="button"]):focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+.grid-backdrop {
+  background-image:
+    linear-gradient(to right, rgba(29, 95, 239, 0.055) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(29, 95, 239, 0.055) 1px, transparent 1px);
+  background-size: 44px 44px;
+}
+
+.dot-backdrop {
+  background-image: radial-gradient(rgba(29, 95, 239, 0.12) 1px, transparent 1px);
+  background-size: 22px 22px;
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(14px);
+  transition:
+    opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  background: #e8edf7;
+  border-radius: 6px;
+}
+.skeleton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.7), transparent);
+  animation: shimmer 1.45s infinite;
+}
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .reveal {
+    transition: none;
+    transform: none;
+    opacity: 1;
+  }
+  .skeleton::after {
+    animation: none;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  .text-pretty {
+    text-wrap: pretty;
+  }
 }

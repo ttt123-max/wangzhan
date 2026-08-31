@@ -47,8 +47,8 @@ export function UnlockModal({
             确认解锁
           </Button>
         </div>
-        <p className="text-xs text-slate-400">
-          <Badge tone="slate">后续拓展入口</Badge>
+        <p className="text-xs text-muted">
+          <Badge tone="neutral">后续拓展入口</Badge>
         </p>
       </div>
     </Modal>

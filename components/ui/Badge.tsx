@@ -1,24 +1,29 @@
 import type { HTMLAttributes } from 'react';
 import { cn } from '@/lib/utils';
 
-type Tone = 'blue' | 'gold' | 'teal' | 'slate';
+type Tone = 'blue' | 'gold' | 'teal' | 'neutral' | 'danger';
 
 const tones: Record<Tone, string> = {
-  blue: 'bg-brand-blue/10 text-brand-blue',
-  gold: 'bg-brand-gold/15 text-amber-700',
-  teal: 'bg-brand-teal/12 text-teal-700',
-  slate: 'bg-slate-100 text-slate-600'
+  blue: 'bg-brand-blueSoft text-brand-blueStrong',
+  gold: 'bg-brand-goldSoft text-[#7a5d06]',
+  teal: 'bg-brand-tealSoft text-teal-700',
+  neutral: 'bg-surface-2 text-muted',
+  danger: 'bg-brand-dangerSoft text-brand-danger'
 };
 
 export function Badge({
-  tone = 'slate',
+  tone = 'neutral',
   className,
   children,
   ...props
 }: HTMLAttributes<HTMLSpanElement> & { tone?: Tone }) {
   return (
     <span
-      className={cn('inline-flex items-center rounded-md px-2 py-0.5 text-xs font-medium', tones[tone], className)}
+      className={cn(
+        'inline-flex items-center gap-1 rounded-md px-2 py-0.5 text-xs font-medium leading-5',
+        tones[tone],
+        className
+      )}
       {...props}
     >
       {children}

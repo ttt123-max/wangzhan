@@ -1,12 +1,16 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { topics, faqs } from '@/lib/content';
+import { Inbox, MessagesSquare, SearchX } from 'lucide-react';
+import { topics, faqsFor } from '@/lib/content';
 import type { CaseType, Faq, Topic, TopicCategory } from '@/lib/types';
-import { FilterBar } from '@/components/columns/FilterBar';
 import { QuestionForm } from '@/components/station/QuestionForm';
 import { InterpretationCard } from '@/components/station/InterpretationCard';
-import { Card } from '@/components/ui/Card';
+import { CaseCard } from '@/components/station/CaseCard';
+import { Chip } from '@/components/ui/Chip';
+import { Badge } from '@/components/ui/Badge';
+import { EmptyState } from '@/components/ui/EmptyState';
+import { Mascot } from '@/components/mascot/Mascot';
 import { createStateStore } from '@/lib/state';
 
 interface MatchResult {
@@ -19,79 +23,113 @@ export default function StationPage() {
   const caseTypes = useMemo(() => Array.from(new Set(topics.map((t) => t.caseType))), []);
   const [category, setCategory] = useState<TopicCategory | '全部'>('全部');
   const [caseType, setCaseType] = useState<CaseType | '全部'>('全部');
-  const [lastQuestion, setLastQuestion] = useState('');
+  const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<MatchResult | null>(null);
 
   const onSubmit = async (question: string) => {
-    setLastQuestion(question);
-    const res = await fetch('/api/matching', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ question, category, caseType })
-    });
-    const data = (await res.json()) as MatchResult;
-    setResult(data);
-    const store = createStateStore();
-    await store.logQuestion(question, data.matched?.topic?.id ?? null);
+    setLoading(true);
+    setResult(null);
+    try {
+      const res = await fetch('/api/matching', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ question, category, caseType })
+      });
+      const data = (await res.json()) as MatchResult;
+      setResult(data);
+      await createStateStore().logQuestion(question, data.matched?.topic?.id ?? null);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  return (
-    <div className="mx-auto max-w-6xl px-4 py-10">
-      <h1 className="text-2xl font-bold text-[#14213d]">线上普法驿站</h1>
-      <p className="mt-2 text-slate-500">筛选主题与案例类型，输入你的问题，让科小獬帮你解读。</p>
+  const library = topics
+    .filter((t) => category === '全部' || t.category === category)
+    .filter((t) => caseType === '全部' || t.caseType === caseType)
+    .sort((a, b) => a.order - b.order)
+    .map((t) => ({ topic: t, faq: faqsFor(t.id)[0] as Faq | undefined }));
 
-      <div className="my-6 rounded-lg border border-slate-200 bg-white p-4">
-        <FilterBar
-          categories={categories}
-          caseTypes={caseTypes}
-          activeCategory={category}
-          activeCaseType={caseType}
-          onCategory={setCategory}
-          onCaseType={setCaseType}
-        />
+  return (
+    <div className="mx-auto max-w-[1400px] px-4 py-10 sm:px-6">
+      <div className="grid gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
+        <div>
+          <Badge tone="blue" className="inline-flex items-center gap-1.5">
+            <MessagesSquare className="h-3.5 w-3.5" />
+            线上普法驿站
+          </Badge>
+          <h1 className="mt-4 text-balance text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
+            说出你的疑问，科小獬给你可行动的答案
+          </h1>
+          <p className="mt-4 max-w-lg text-pretty text-sm leading-relaxed text-muted">
+            免去逐条啃法条的功夫。选择主题与案例类型，再输入问题，科小獬结合知识库给出贴近实操的普法解读。下方是实时案例库，随时浏览。
+          </p>
+        </div>
+        <div className="flex justify-center lg:justify-end">
+          <Mascot mood="ask" className="h-40 w-40" />
+        </div>
       </div>
 
-      <QuestionForm onSubmit={onSubmit} />
-
-      {result?.matched ? (
-        <div className="mt-6">
-          <InterpretationCard
-            question={lastQuestion}
-            faq={result.matched.faq}
-            topic={result.matched.topic ?? undefined}
-          />
-        </div>
-      ) : result?.fallback ? (
-        <Card className="mt-6">
-          <p className="font-medium text-[#14213d]">暂时没有精准匹配到你的问题。</p>
-          <p className="mt-1 text-sm text-slate-500">
-            你可以换个更具体的说法，或先看看这些热门专题：
-          </p>
-          <div className="mt-3 flex flex-wrap gap-2">
-            {topics.slice(0, 4).map((t) => (
-              <a
-                key={t.id}
-                href={`/columns/${t.slug}`}
-                className="rounded-md border border-slate-200 px-3 py-1.5 text-sm text-brand-blue hover:border-brand-blue/40"
-              >
-                {t.title}
-              </a>
-            ))}
-          </div>
-        </Card>
-      ) : null}
-
-      <div className="mt-10">
-        <h2 className="mb-3 font-semibold text-[#14213d]">驿站常见问题</h2>
-        <div className="grid gap-3 sm:grid-cols-2">
-          {faqs.slice(0, 4).map((f) => (
-            <Card key={f.id} className="py-4">
-              <p className="text-sm font-medium text-[#14213d]">{f.question}</p>
-              <p className="mt-1 text-sm text-slate-500">{f.answer}</p>
-            </Card>
+      <div className="my-8 rounded-2xl border border-border bg-surface p-6 shadow-soft">
+        <div className="mb-4 flex flex-wrap items-center gap-2">
+          <span className="text-sm font-medium text-foreground">筛选范围</span>
+          {(['全部', ...categories] as const).map((c) => (
+            <Chip key={c} active={category === c} onClick={() => setCategory(c)}>
+              {c}
+            </Chip>
+          ))}
+          <span className="mx-2 hidden h-4 w-px bg-border sm:block" />
+          {(['全部', ...caseTypes] as const).map((c) => (
+            <Chip key={c} active={caseType === c} onClick={() => setCaseType(c)}>
+              {c}
+            </Chip>
           ))}
         </div>
+        <QuestionForm onSubmit={onSubmit} loading={loading} />
+
+        {loading ? (
+          <div className="mt-5 space-y-3">
+            <div className="skeleton h-4 w-1/3" />
+            <div className="skeleton h-16 w-full rounded-xl" />
+          </div>
+        ) : result?.matched ? (
+          <div className="mt-5">
+            <InterpretationCard faq={result.matched.faq} topic={result.matched.topic ?? undefined} />
+          </div>
+        ) : result?.fallback ? (
+          <div className="mt-5 rounded-xl bg-surface-2 p-5">
+            <p className="font-medium text-foreground">暂时没有精准匹配到你的问题。</p>
+            <p className="mt-1 text-sm text-muted">换个更具体的说法，或先浏览下方案例库。</p>
+            <p className="mt-3 inline-flex items-center gap-1.5 text-sm text-brand-blue">
+              <Inbox className="h-4 w-4" />
+              你的问题已被记录，便于后续精细化普法
+            </p>
+          </div>
+        ) : null}
       </div>
+
+      <section>
+        <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
+          <div>
+            <h2 className="text-xl font-semibold tracking-tight text-foreground">案例库</h2>
+            <p className="mt-1 text-sm text-muted">按你筛选的主题与案例类型陈列实时普法案例。</p>
+          </div>
+          <Badge tone="neutral">{library.length} 个案例</Badge>
+        </div>
+
+        {library.length === 0 ? (
+          <EmptyState
+            icon={SearchX}
+            title="没有符合筛选条件的案例"
+            description="换个主题或案例类型，浏览更多网信普法案例。"
+          />
+        ) : (
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {library.map((c) => (
+              <CaseCard key={c.topic.id} topic={c.topic} faq={c.faq} />
+            ))}
+          </div>
+        )}
+      </section>
     </div>
   );
 }

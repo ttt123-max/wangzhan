@@ -60,15 +60,15 @@ export function PremiumContent({
   };
 
   return (
-    <div className="rounded-lg border border-slate-200 bg-white p-8 text-center">
+    <div className="rounded-xl border border-border bg-surface p-8 text-center shadow-soft">
       <LockKeyhole className="mx-auto h-10 w-10 text-brand-gold" />
-      <h2 className="mt-3 text-lg font-bold text-[#14213d]">拓展案例专题</h2>
-      <p className="mx-auto mt-2 max-w-md text-sm text-slate-500">
+      <h2 className="mt-3 text-lg font-semibold text-foreground">拓展案例专题</h2>
+      <p className="mx-auto mt-2 max-w-md text-sm text-muted">
         「{topic.title}」是拓展案例专题，需要 {topic.premiumPoints} 积分解锁。
         {profile ? ` 当前积分：${profile.points}` : ' 请先登录后再解锁。'}
       </p>
       {message ? (
-        <p className="mt-3 text-sm font-medium text-amber-600">{message}</p>
+        <p className="mt-3 text-sm font-medium text-brand-gold">{message}</p>
       ) : null}
       <div className="mt-5 flex justify-center gap-3">
         <Button onClick={onUnlock} icon={Sparkles} disabled={!profile}>
@@ -77,13 +77,13 @@ export function PremiumContent({
         {!profile ? (
           <a
             href="/login"
-            className="inline-flex items-center gap-2 rounded-lg border border-brand-blue/30 px-3 py-2 text-sm text-brand-blue"
+            className="inline-flex items-center gap-2 rounded-lg border border-border px-3 py-2 text-sm font-medium text-brand-blue"
           >
             去登录
           </a>
         ) : null}
       </div>
-      <p className="mt-4 text-xs text-slate-400">
+      <p className="mt-4 text-xs text-muted">
         <Badge tone="gold">后续拓展入口</Badge>
       </p>
     </div>

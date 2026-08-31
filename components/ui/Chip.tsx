@@ -1,21 +1,23 @@
 'use client';
 
-import type { HTMLAttributes } from 'react';
+import type { ButtonHTMLAttributes } from 'react';
 import { cn } from '@/lib/utils';
 
-interface ChipProps extends HTMLAttributes<HTMLButtonElement> {
-  active?: boolean;
-}
-
-export function Chip({ active, className, children, ...props }: ChipProps) {
+export function Chip({
+  active,
+  className,
+  children,
+  ...props
+}: ButtonHTMLAttributes<HTMLButtonElement> & { active?: boolean }) {
   return (
     <button
       type="button"
       className={cn(
-        'inline-flex items-center gap-1 rounded-md border px-3 py-1.5 text-sm transition-colors',
+        'inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-sm font-medium transition-colors',
+        'active:translate-y-[1px]',
         active
           ? 'border-brand-blue bg-brand-blue text-white'
-          : 'border-slate-200 bg-white text-slate-600 hover:border-brand-blue/40',
+          : 'border-border bg-surface text-foreground-soft hover:border-brand-blue/50 hover:text-foreground',
         className
       )}
       {...props}

@@ -1,19 +1,12 @@
 'use client';
 
-import type { ButtonHTMLAttributes } from 'react';
+import Link from 'next/link';
 import type { LucideIcon } from 'lucide-react';
-import { Loader2 } from 'lucide-react';
+import type { ReactNode } from 'react';
 import { cn } from '@/lib/utils';
 
 type Variant = 'primary' | 'secondary' | 'outline' | 'ghost' | 'gold';
 type Size = 'sm' | 'md' | 'lg';
-
-interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: Variant;
-  size?: Size;
-  icon?: LucideIcon;
-  loading?: boolean;
-}
 
 const variants: Record<Variant, string> = {
   primary: 'bg-brand-blue text-white hover:bg-brand-blueStrong shadow-soft',
@@ -30,34 +23,34 @@ const sizes: Record<Size, string> = {
   lg: 'h-13 px-6 text-base'
 };
 
-export function Button({
+export function ButtonLink({
+  href,
   variant = 'primary',
   size = 'md',
   icon: Icon,
-  loading,
   className,
-  children,
-  disabled,
-  ...props
-}: ButtonProps) {
+  children
+}: {
+  href: string;
+  variant?: Variant;
+  size?: Size;
+  icon?: LucideIcon;
+  className?: string;
+  children: ReactNode;
+}) {
   return (
-    <button
+    <Link
+      href={href}
       className={cn(
         'inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-all duration-200',
-        'active:translate-y-[1px] disabled:cursor-not-allowed disabled:opacity-55',
+        'active:translate-y-[1px]',
         variants[variant],
         sizes[size],
         className
       )}
-      disabled={disabled || loading}
-      {...props}
     >
-      {loading ? (
-        <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
-      ) : Icon ? (
-        <Icon className="h-4 w-4" aria-hidden />
-      ) : null}
-      <span className={loading ? 'opacity-80' : undefined}>{children}</span>
-    </button>
+      {Icon ? <Icon className="h-4 w-4" aria-hidden /> : null}
+      {children}
+    </Link>
   );
 }
