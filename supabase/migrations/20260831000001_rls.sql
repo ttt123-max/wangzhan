@@ -38,3 +38,15 @@ create policy "questions_select_own"
 create policy "questions_insert_own"
   on public.question_logs for insert
   with check (auth.uid() = user_id);
+
+-- 让 Supabase Data API（PostgREST）能访问这些表，同时由 RLS 控制行级访问。
+grant usage on schema public to anon, authenticated;
+grant select, insert, update, delete on
+  public.profiles,
+  public.user_quiz_attempts,
+  public.browsing_history,
+  public.unlocked_topics,
+  public.question_logs
+  to anon, authenticated;
+
+grant execute on function public.add_points(uuid, integer) to authenticated;
