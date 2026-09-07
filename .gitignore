@@ -1,11 +1,15 @@
 node_modules/
 .next/
+.open-next/
+.wrangler-config/
+.wrangler/
 out/
 dist/
 .env
 .env.local
 .env.local.disabled
 .env*.local
+.dev.vars
 *.log
 *.tsbuildinfo
 .DS_Store
