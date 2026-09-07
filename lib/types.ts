@@ -6,9 +6,17 @@ export type TopicCategory =
   | '信息内容治理'
   | '网络反诈'
   | '网络侵权'
+  | '人工智能'
+  | '网络暴力'
+  | '算法治理'
   | '综合';
 
 export type CaseType = '科普' | '案例' | '答疑' | '互动';
+
+export interface OfficialDoc {
+  label: string;
+  url: string;
+}
 
 export interface Topic {
   id: number;
@@ -21,6 +29,7 @@ export interface Topic {
   premiumPoints: number;
   accent: 'blue' | 'gold' | 'teal';
   order: number;
+  officialDocs?: OfficialDoc[];
 }
 
 export interface Article {

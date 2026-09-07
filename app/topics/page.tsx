@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { ArrowRight, Lock, Sparkles, Unlock } from 'lucide-react';
+import { ArrowRight, FileText, Lock, Sparkles, Unlock } from 'lucide-react';
 import { topics } from '@/lib/content';
 import type { Topic, UserProfile } from '@/lib/types';
 import { createStateStore } from '@/lib/state';
@@ -89,9 +89,22 @@ export default function TopicsPage() {
                 </div>
                 <div className="mt-4">
                   {isUnlocked ? (
-                    <Link href={`/columns/${t.slug}`} className="inline-flex items-center gap-1 text-sm font-medium text-brand-blue">
-                      进入专题 <ArrowRight className="h-4 w-4" />
-                    </Link>
+                    <div className="flex flex-wrap items-center gap-4">
+                      <Link href={`/columns/${t.slug}`} className="inline-flex items-center gap-1 text-sm font-medium text-brand-blue">
+                        进入专题 <ArrowRight className="h-4 w-4" />
+                      </Link>
+                      {t.officialDocs?.[0]?.url ? (
+                        <a
+                          href={t.officialDocs[0].url}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="inline-flex items-center gap-1 text-sm font-medium text-brand-teal hover:underline"
+                        >
+                          <FileText className="h-4 w-4" />
+                          官方文件
+                        </a>
+                      ) : null}
+                    </div>
                   ) : (
                     <Button
                       variant="gold"

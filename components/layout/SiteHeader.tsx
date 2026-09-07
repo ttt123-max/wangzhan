@@ -6,6 +6,7 @@ import {
   ChartNoAxesColumn,
   Columns3,
   Gauge,
+  History,
   Home,
   Library,
   LogOut,
@@ -28,7 +29,8 @@ const nav = [
   { href: '/columns', label: '普法专栏', icon: Columns3 },
   { href: '/station', label: '普法驿站', icon: MessageCircleQuestion },
   { href: '/topics', label: '专题库', icon: Library },
-  { href: '/quiz', label: '答题中心', icon: Gauge }
+  { href: '/quiz', label: '答题中心', icon: Gauge },
+  { href: '/quiz-history', label: '答题记录', icon: History }
 ];
 
 export function SiteHeader() {

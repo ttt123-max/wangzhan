@@ -1,4 +1,5 @@
 import { notFound } from 'next/navigation';
+import { FileText } from 'lucide-react';
 import { bySlug, articlesFor, faqsFor } from '@/lib/content';
 import { Badge } from '@/components/ui/Badge';
 import { PremiumContent } from '@/components/columns/PremiumContent';
@@ -31,6 +32,26 @@ export default async function ColumnDetailPage({
       </div>
       <h1 className="text-3xl font-semibold tracking-tight text-foreground">{topic.title}</h1>
       <p className="mt-2 max-w-2xl text-pretty text-foreground-soft">{topic.summary}</p>
+
+      {topic.officialDocs?.length ? (
+        <div className="mt-5 rounded-lg border border-border bg-surface p-4 shadow-soft">
+          <p className="mb-3 text-sm font-medium text-foreground">完整官方文件</p>
+          <div className="flex flex-wrap gap-3">
+            {topic.officialDocs.map((doc) => (
+              <a
+                key={doc.url}
+                href={doc.url}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-1.5 rounded-lg bg-brand-blueSoft px-3 py-2 text-sm font-medium text-brand-blueStrong transition-colors hover:bg-brand-blueSoft/70"
+              >
+                <FileText className="h-4 w-4" />
+                {doc.label}
+              </a>
+            ))}
+          </div>
+        </div>
+      ) : null}
 
       <div className="mt-6">
         {topic.isPremium ? (

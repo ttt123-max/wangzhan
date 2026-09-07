@@ -2,8 +2,8 @@ import { describe, it, expect } from 'vitest';
 import { topics, articles, faqs, quizzes } from '../lib/content';
 
 describe('content', () => {
-  it('has 8 topics with required metadata', () => {
-    expect(topics.length).toBe(8);
+  it('has 12 topics with required metadata', () => {
+    expect(topics.length).toBe(12);
     expect(topics.every((t) => t.slug && t.title && t.summary)).toBe(true);
     expect(topics.some((t) => t.isPremium)).toBe(true);
     expect(topics.some((t) => t.isPremium && t.premiumPoints > 0)).toBe(true);

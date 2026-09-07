@@ -58,10 +58,14 @@ export function Mascot({ mood = 'default', className }: MascotProps) {
       <circle cx="126" cy="104" r="5" fill="#F5B60D" opacity="0.4" />
 
       {/* 嘴 */}
-      <path d={smile} stroke="#14213D" strokeWidth="3" fill="none" strokeLinecap="round" />
+      <g transform="translate(94 108)">
+        <path d={smile} stroke="#14213D" strokeWidth="3" fill="none" strokeLinecap="round" />
+      </g>
 
       {/* 手臂 */}
-      <path d={arms} stroke="#2C6BE0" strokeWidth="10" strokeLinecap="round" />
+      <g transform="translate(100 112)">
+        <path d={arms} stroke="#2C6BE0" strokeWidth="10" strokeLinecap="round" />
+      </g>
 
       {/* 法盾 */}
       <g transform="translate(150 130)">

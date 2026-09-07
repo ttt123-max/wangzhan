@@ -6,6 +6,14 @@ import { quizzes } from '@/lib/content';
 import type { Quiz } from '@/lib/types';
 import { createStateStore } from '@/lib/state';
 import { pointsForQuiz } from '@/lib/logic/points';
+import {
+  DAILY_QUIZ_COUNT,
+  getDailyQuizzes,
+  todayKey,
+  readDailySeen,
+  markDailySeen
+} from '@/lib/logic/dailyQuiz';
+import { addQuizHistory } from '@/lib/logic/quizHistory';
 import { ScorePanel } from './ScorePanel';
 import { QuizOption } from './QuizOption';
 import { Mascot } from '@/components/mascot/Mascot';
@@ -15,31 +23,34 @@ import { StatePanel } from '@/components/ui/StatePanel';
 
 export function QuizRunner() {
   const [loading, setLoading] = useState(true);
-  const [attempted, setAttempted] = useState<number[]>([]);
+  const [seen, setSeen] = useState<number[]>([]);
   const [points, setPoints] = useState(0);
+  const [daily, setDaily] = useState<Quiz[]>([]);
   const [active, setActive] = useState<Quiz | null>(null);
   const [selected, setSelected] = useState<number | null>(null);
   const [revealed, setRevealed] = useState(false);
   const [counted, setCounted] = useState(false);
 
-  const load = async () => {
-    const store = createStateStore();
-    const ids = await store.getAttemptedQuizIds();
-    const p = await store.loadProfile();
-    setAttempted(ids);
-    setPoints(p?.points ?? 0);
-    setActive(quizzes.filter((q) => !ids.includes(q.id))[0] ?? null);
-    setLoading(false);
-  };
-
   useEffect(() => {
+    const load = async () => {
+      const store = createStateStore();
+      const day = todayKey();
+      const pool = getDailyQuizzes(quizzes, day);
+      const profile = await store.loadProfile();
+      setPoints(profile?.points ?? 0);
+      setDaily(pool);
+      const seenIds = readDailySeen(day).filter((id) => pool.some((q) => q.id === id));
+      setSeen(seenIds);
+      setActive(pool.find((q) => !seenIds.includes(q.id)) ?? null);
+      setLoading(false);
+    };
     void load();
   }, []);
 
-  const pool = quizzes.filter((q) => !attempted.includes(q.id));
-  const current = active ?? pool[0] ?? null;
-  const done = pool.length === 0;
-  const answeredPercent = quizzes.length ? Math.min(100, (attempted.length / quizzes.length) * 100) : 0;
+  const current = active;
+  const remaining = daily.filter((q) => !seen.includes(q.id));
+  const done = remaining.length === 0;
+  const todayDone = daily.filter((q) => seen.includes(q.id)).length;
 
   const choose = async (optionIndex: number) => {
     if (!current || revealed) return;
@@ -54,12 +65,19 @@ export function QuizRunner() {
       setPoints((p) => p + earned);
       window.dispatchEvent(new Event('kxb:auth'));
     }
-    setAttempted((prev) => (prev.includes(current.id) ? prev : [...prev, current.id]));
+    addQuizHistory({
+      quizId: current.id,
+      selectedIndex: optionIndex,
+      isCorrect: correct,
+      dateKey: todayKey(),
+      answeredAt: new Date().toISOString()
+    });
+    const day = todayKey();
+    setSeen(markDailySeen(day, current.id));
   };
 
   const next = () => {
-    const remaining = quizzes.filter((q) => !attempted.includes(q.id));
-    setActive(remaining[0] ?? null);
+    setActive(daily.find((q) => !seen.includes(q.id)) ?? null);
     setSelected(null);
     setRevealed(false);
     setCounted(false);
@@ -75,13 +93,18 @@ export function QuizRunner() {
           <Sparkles className="h-4 w-4" />
           完成
         </div>
-        <h2 className="mt-3 text-xl font-semibold text-foreground">今日题目已完成</h2>
+        <h2 className="mt-3 text-xl font-semibold text-foreground">今日 {DAILY_QUIZ_COUNT} 道题已完成</h2>
         <p className="mx-auto mt-2 max-w-md text-sm text-muted">
-          你已完成全部小问答，当前积分 <span className="font-semibold text-brand-gold">{points}</span>。去专题库用积分解锁更多拓展案例吧。
+          你完成了今天的全部小问答，当前积分 <span className="font-semibold text-brand-gold">{points}</span>。
+          明天会自动换一组新题，也可以回看今天做过的题。
         </p>
         <div className="mt-5 flex justify-center gap-3">
-          <ButtonLink href="/topics" variant="outline" icon={Sparkles}>去专题库</ButtonLink>
-          <ButtonLink href="/station" variant="ghost">去普法驿站提问</ButtonLink>
+          <ButtonLink href="/quiz-history" variant="outline" icon={Sparkles}>
+            查看做过的题
+          </ButtonLink>
+          <ButtonLink href="/topics" variant="ghost">
+            去专题库
+          </ButtonLink>
         </div>
       </div>
     );
@@ -89,14 +112,14 @@ export function QuizRunner() {
 
   return (
     <div className="space-y-4">
-      <ScorePanel points={points} completed={attempted.length} />
+      <ScorePanel points={points} completed={todayDone} />
       <div className="rounded-lg border border-border bg-surface p-6 shadow-soft sm:p-8">
-        <div className="mb-4 flex items-center justify-between">
-          <p className="text-sm text-muted">共 {quizzes.length} 题 · 已完成 {attempted.length}</p>
+        <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+          <p className="text-sm text-muted">今日 {daily.length} 题 · 已完成 {todayDone}</p>
           <div className="h-1.5 w-40 overflow-hidden rounded-full bg-surface-2">
             <div
               className="h-full rounded-full bg-brand-blue transition-all duration-500"
-              style={{ width: `${answeredPercent}%` }}
+              style={{ width: `${daily.length ? (todayDone / daily.length) * 100 : 0}%` }}
             />
           </div>
         </div>
@@ -115,7 +138,13 @@ export function QuizRunner() {
         </div>
         {revealed ? (
           <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
-            <p className={selected === current?.correctIndex ? 'inline-flex items-center gap-1.5 text-sm font-medium text-teal-700' : 'inline-flex items-center gap-1.5 text-sm font-medium text-brand-danger'}>
+            <p
+              className={
+                selected === current?.correctIndex
+                  ? 'inline-flex items-center gap-1.5 text-sm font-medium text-teal-700'
+                  : 'inline-flex items-center gap-1.5 text-sm font-medium text-brand-danger'
+              }
+            >
               {selected === current?.correctIndex ? (
                 <>
                   <CheckCircle2 className="h-4 w-4" /> 答对了，+{current?.points} 分
@@ -131,6 +160,13 @@ export function QuizRunner() {
           </div>
         ) : null}
       </div>
+      <p className="text-center text-xs text-muted">
+        每天自动从题库抽取 {DAILY_QUIZ_COUNT} 道，每题只计一次分；
+        <a href="/quiz-history" className="text-brand-blue hover:underline">
+          {' '}
+          查看做过的题
+        </a>
+      </p>
     </div>
   );
 }

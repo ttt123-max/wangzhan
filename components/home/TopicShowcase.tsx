@@ -8,7 +8,7 @@ import { Badge } from '@/components/ui/Badge';
 import { Reveal } from '@/components/layout/Reveal';
 
 export function TopicShowcase() {
-  const featured = [...topics].sort((a, b) => a.order - b.order).slice(0, 6);
+  const featured = [...topics].sort((a, b) => a.order - b.order);
   return (
     <section className="mx-auto max-w-[1400px] px-4 py-16 sm:px-6">
       <Reveal>

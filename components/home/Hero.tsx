@@ -49,8 +49,8 @@ export function Hero() {
               </div>
               <div className="relative grid grid-cols-3 gap-3 text-center">
                 {[
-                  ['8', '个普法专题'],
-                  ['32+', '常见问答'],
+                  ['12', '个普法专题'],
+                  ['48+', '常见问答'],
                   ['100%', '可回溯']
                 ].map(([n, label]) => (
                   <div key={label} className="rounded-lg bg-surface-2 px-2 py-3">

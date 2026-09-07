@@ -7,7 +7,7 @@ const items = [
   {
     icon: Scale,
     title: '全场景覆盖',
-    desc: '网络安全、个人信息、数据安全、未成年人保护、反诈、网络侵权等 8 大普法专题，全都讲得清。',
+    desc: '网络安全、个人信息、数据安全、AI生成、网暴、算法、反诈等 12 大普法专题，全都讲得清。',
     accent: 'bg-brand-blueSoft text-brand-blue'
   },
   {
